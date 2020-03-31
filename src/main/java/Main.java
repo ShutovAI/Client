@@ -50,8 +50,9 @@ public class Main {
                 });
                 t.start();
                 t.join();
-                if(message.equals("exit")){
-                    w.interrupt();
+                if(message.startsWith("exit")){
+//                    w.interrupt();
+                    System.exit(0);
                     break;
                 }
             }
