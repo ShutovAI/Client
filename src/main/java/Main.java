@@ -7,22 +7,34 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Hi, client!");
+        System.out.println("Добро пожаловать в ЧАТ!\n1.Регистрация\n2.Аутентификация\n3.Выход");
         try (BufferedReader console = new BufferedReader(
                 new InputStreamReader(System.in))) {
             Socket socket = new Socket(IP, PORT);
-            while (true) {
-                System.out.print("Enter Login and Password:(example login:password) ");
-                String reg = console.readLine();
-                    if (reg.contains(":")) {
-                        PrintWriter writer0 = new PrintWriter(socket.getOutputStream());
-                        writer0.println(reg);
-                        writer0.flush();
-                        break;
-                    } else {
-                        System.out.println("Не верная запись ввода!\nПопробуйте еще раз! example login:password");
+            switch (console.readLine()) {
+                case "1":
+                    while (true) {
+                        System.out.print("Введите логин и пароль! (логин:пароль) ");
+                        String reg = console.readLine();
+                        reg.replaceAll("\\s", "");
+                        if (!reg.contains(":")) {
+                            System.out.println("Не верная запись ввода!\nПопробуйте еще раз! example login:password");
+                        } else {
+                            PrintWriter writer0 = new PrintWriter(socket.getOutputStream());
+                            writer0.println(reg);
+                            writer0.flush();
+                            BufferedReader clientReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                            String serverMessage = clientReader.readLine();
+                            if (serverMessage.contains("Данный пользователь уже зарегистрирован!")) {
+                                System.out.print("Данный пользователь уже зарегистрирован!");
+                                return;
+                            } else {
+                                break;
+                            }
+                        }
                     }
-                }
-          Thread w =  new Thread(() -> {
+            }
+            Thread w = new Thread(() -> {
                 try {
                     BufferedReader serverReader = new BufferedReader(
                             new InputStreamReader(socket.getInputStream()));
@@ -50,7 +62,7 @@ public class Main {
                 });
                 t.start();
                 t.join();
-                if(message.startsWith("exit")){
+                if (message.startsWith("exit")) {
 //                    w.interrupt();
                     System.exit(0);
                     break;
@@ -60,13 +72,20 @@ public class Main {
             e.printStackTrace();
         }
 
+//        private void login(Socket socket){
+//           try {
+//               BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//               System.out.println("Введите логин: ");
+//               String log = reader.readLine();
+//               if(!log.isEmpty()){
+//
+//               }
+//           }catch (IOException e){
+//               e.printStackTrace();
+//           }
+//        }
 
-//        try(BufferedReader log = new BufferedReader(new InputStreamReader(System.in))){
-//            User user = new User();
-//            System.out.println("Enter your login and password: ");
-//            String login = log.readLine();
-//            String password = log.readLine();
-//            System.out.println("I send " + login + " and " + password);
+
 //
 //            new Thread(()->{
 //                try {
