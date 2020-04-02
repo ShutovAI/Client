@@ -13,30 +13,32 @@ public class Main {
             switch (console.readLine()) {
                 case "1":
 //                    while (true) {
-                        System.out.print("Введите логин и пароль! (!логин:пароль!) ");
-                        String reg = console.readLine();
-                        while (!reg.contains(":") || reg.startsWith(" ") || reg.startsWith(":")) {
-                            System.out.println("Не верная запись ввода!\nПопробуйте еще раз! (!логин:пароль!)");
-                            reg = console.readLine();
-                        }
-                        String boom = reg.replaceAll("\\s", "");
-                        reg = boom;
+                    System.out.print("Введите логин и пароль! (!логин:пароль!) ");
+                    String reg = console.readLine();
+                    while (!reg.contains(":") || reg.startsWith(" ") || reg.startsWith(":")) {
+                        System.out.println("Не верная запись ввода!\nПопробуйте еще раз! (!логин:пароль!)");
+                        reg = console.readLine();
+                    }
+                    String boom = reg.replaceAll("\\s", "");
+                    reg = boom;
 
-                        PrintWriter writer0 = new PrintWriter(socket.getOutputStream());
-                        writer0.println(reg + "REGISTRATION");
-                        writer0.flush();
-                        BufferedReader clientReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        String serverMessage = clientReader.readLine();
-                        while (true) {
-                            if (serverMessage.contains("Данный пользователь уже зарегистрирован!")) {
-                                serverMessage = clientReader.readLine();
-                                System.out.println(serverMessage);
-                            } else if (serverMessage.contains("Регистация прошла успешно!")) {
-                                System.out.println(serverMessage);
-                                break;
-                            }
-                        }
-                        break;
+                    PrintWriter writer0 = new PrintWriter(socket.getOutputStream());
+                    writer0.println(reg + "REGISTRATION");
+                    writer0.flush();
+                    BufferedReader clientReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    String serverMessage = clientReader.readLine();
+                    while (!serverMessage.equals("Регистация прошла успешно!")) {
+                        System.out.println("Данный пользователь уже зарегистрирован! Повторите ввод:");
+                        serverMessage = clientReader.readLine();
+                        String out = console.readLine();
+                        PrintWriter writer1 = new PrintWriter(socket.getOutputStream());
+                        writer1.println(out);
+                        writer1.flush();
+                    }
+
+//                    serverMessage.contains("Регистация прошла успешно!");
+                    System.out.println("Регистация прошла успешно!");
+                    break;
 
 //                        if (serverMessage.contains("Данный пользователь уже зарегистрирован!")) {
 //                            System.out.println("Данный пользователь уже зарегистрирован!");
@@ -136,3 +138,4 @@ public class Main {
         System.out.println("Добро пожаловать в ЧАТ!\n1.Регистрация\n2.Аутентификация\n3.Выход");
     }
 }
+
