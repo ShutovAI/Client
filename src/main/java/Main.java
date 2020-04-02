@@ -6,33 +6,61 @@ public class Main {
     public final static int PORT = 8290;
 
     public static void main(String[] args) {
-        System.out.println("Hi, client!");
         System.out.println("Добро пожаловать в ЧАТ!\n1.Регистрация\n2.Аутентификация\n3.Выход");
         try (BufferedReader console = new BufferedReader(
                 new InputStreamReader(System.in))) {
             Socket socket = new Socket(IP, PORT);
             switch (console.readLine()) {
                 case "1":
-                    while (true) {
-                        System.out.print("Введите логин и пароль! (логин:пароль) ");
+//                    while (true) {
+                        System.out.print("Введите логин и пароль! (!логин:пароль!) ");
                         String reg = console.readLine();
-                        reg.replaceAll("\\s", "");
-                        if (!reg.contains(":")) {
-                            System.out.println("Не верная запись ввода!\nПопробуйте еще раз! example login:password");
-                        } else {
-                            PrintWriter writer0 = new PrintWriter(socket.getOutputStream());
-                            writer0.println(reg);
-                            writer0.flush();
-                            BufferedReader clientReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                            String serverMessage = clientReader.readLine();
+                        while (!reg.contains(":") || reg.startsWith(" ") || reg.startsWith(":")) {
+                            System.out.println("Не верная запись ввода!\nПопробуйте еще раз! (!логин:пароль!)");
+                            reg = console.readLine();
+                        }
+                        String boom = reg.replaceAll("\\s", "");
+                        reg = boom;
+
+                        PrintWriter writer0 = new PrintWriter(socket.getOutputStream());
+                        writer0.println(reg + "REGISTRATION");
+                        writer0.flush();
+                        BufferedReader clientReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        String serverMessage = clientReader.readLine();
+                        while (true) {
                             if (serverMessage.contains("Данный пользователь уже зарегистрирован!")) {
-                                System.out.print("Данный пользователь уже зарегистрирован!");
-                                return;
-                            } else {
+                                serverMessage = clientReader.readLine();
+                                System.out.println(serverMessage);
+                            } else if (serverMessage.contains("Регистация прошла успешно!")) {
+                                System.out.println(serverMessage);
                                 break;
                             }
                         }
+                        break;
+
+//                        if (serverMessage.contains("Данный пользователь уже зарегистрирован!")) {
+//                            System.out.println("Данный пользователь уже зарегистрирован!");
+//                        } else {
+//                            System.out.println("Регистрация прошла успешно!");
+//                            break;
+//                        }
+//                    }
+                case "2":
+                    System.out.print("Введите логин и пароль! (логин:пароль) ");
+                    String aut = console.readLine();
+                    if (!aut.contains(":")) {
+                        System.out.println("Не верная запись ввода!\nПопробуйте еще раз! example login:password");
+                    } else {
+                        PrintWriter writer2 = new PrintWriter(socket.getOutputStream());
+                        writer2.println(aut);
+                        writer2.flush();
+                        BufferedReader clientReader2 = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        String serverMessage2 = clientReader2.readLine();
+                        if (serverMessage2.contains("Пользователь с таким именем отсутствует!")) {
+                            System.out.println("Пользователь с таким именем отсутствует!");
+                        }
                     }
+                    break;
             }
             Thread w = new Thread(() -> {
                 try {
@@ -49,8 +77,6 @@ public class Main {
 
             while (true) {
                 String message = console.readLine();
-//                System.out.println("I will send " + message);
-
                 Thread t = new Thread(() -> {
                     try {
                         PrintWriter writer = new PrintWriter(socket.getOutputStream());
@@ -71,19 +97,6 @@ public class Main {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
-//        private void login(Socket socket){
-//           try {
-//               BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-//               System.out.println("Введите логин: ");
-//               String log = reader.readLine();
-//               if(!log.isEmpty()){
-//
-//               }
-//           }catch (IOException e){
-//               e.printStackTrace();
-//           }
-//        }
 
 
 //
@@ -117,5 +130,9 @@ public class Main {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    private void menu() {
+        System.out.println("Добро пожаловать в ЧАТ!\n1.Регистрация\n2.Аутентификация\n3.Выход");
     }
 }
