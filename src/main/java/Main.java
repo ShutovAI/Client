@@ -40,28 +40,21 @@ public class Main {
                     System.out.println("Регистация прошла успешно!");
                     break;
 
-//                        if (serverMessage.contains("Данный пользователь уже зарегистрирован!")) {
-//                            System.out.println("Данный пользователь уже зарегистрирован!");
-//                        } else {
-//                            System.out.println("Регистрация прошла успешно!");
-//                            break;
-//                        }
-//                    }
                 case "2":
                     System.out.print("Введите логин и пароль! (логин:пароль) ");
                     String aut = console.readLine();
-                    if (!aut.contains(":")) {
-                        System.out.println("Не верная запись ввода!\nПопробуйте еще раз! example login:password");
-                    } else {
-                        PrintWriter writer2 = new PrintWriter(socket.getOutputStream());
-                        writer2.println(aut);
-                        writer2.flush();
-                        BufferedReader clientReader2 = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        String serverMessage2 = clientReader2.readLine();
-                        if (serverMessage2.contains("Пользователь с таким именем отсутствует!")) {
-                            System.out.println("Пользователь с таким именем отсутствует!");
-                        }
+                    while (!aut.contains(":") || aut.startsWith(" ") || aut.startsWith(":")) {
+                        System.out.println("Не верная запись ввода!\nПопробуйте еще раз! (!логин:пароль!)");
+                        aut = console.readLine();
                     }
+                    String boom2 = aut.replaceAll("\\s", "");
+                    aut = boom2;
+                    PrintWriter writer2 = new PrintWriter(socket.getOutputStream());
+                    writer2.println(aut + "AUT");
+                    writer2.flush();
+//                    BufferedReader clientReader2 = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//                    String serverMessage2 = clientReader2.readLine();
+//                    System.out.println(serverMessage2);
                     break;
             }
             Thread w = new Thread(() -> {
