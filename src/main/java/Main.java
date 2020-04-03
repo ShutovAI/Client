@@ -56,6 +56,9 @@ public class Main {
 //                    String serverMessage2 = clientReader2.readLine();
 //                    System.out.println(serverMessage2);
                     break;
+
+                case "3":
+                   System.exit(0);
             }
             Thread w = new Thread(() -> {
                 try {
@@ -84,7 +87,6 @@ public class Main {
                 t.start();
                 t.join();
                 if (message.startsWith("exit")) {
-//                    w.interrupt();
                     System.exit(0);
                     break;
                 }
@@ -92,43 +94,6 @@ public class Main {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
-
-//
-//            new Thread(()->{
-//                try {
-//                    PrintWriter writer1 = new PrintWriter(user.getLogin());
-//                    writer1.write(login);
-//                    writer1.flush();
-//                    PrintWriter writer2 = new PrintWriter(user.getPassword());
-//                    writer2.write(password);
-//                    writer2.flush();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }).start();
-
-//            try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("1.out"))){
-//            oos.writeObject(new User ("login","password"));
-//            }catch (IOException e){
-//                e.printStackTrace();
-//            }
-//
-//            try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("1.out"))){
-//              User user = (User) ois.readObject();
-//                System.out.println("user.getLogin() + user.getPassword() = " + user.getLogin() + user.getPassword());
-//            } catch (IOException | ClassNotFoundException e) {
-//                e.printStackTrace();
-//            }
-
-
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-    }
-
-    private void menu() {
-        System.out.println("Добро пожаловать в ЧАТ!\n1.Регистрация\n2.Аутентификация\n3.Выход");
     }
 }
 
